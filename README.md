@@ -1,12 +1,22 @@
-# Newbeultra Terminal 1.9.0
+# Newbeultra Terminal 1.10.0
 
 Homepage begins directly with terminal search. The sidebar logo has been
-replaced with an animated CRT companion: it boots with typed terminal
-lines, then shows a face whose eyes follow the mouse, blinks at random
-intervals, and falls asleep (closed eyes + "zZz") after five minutes of
-no mouse/keyboard/scroll/touch activity. Any interaction wakes it back up.
-Colors follow the active theme accent color. Users with
-`prefers-reduced-motion` see a static ready state instead.
+replaced with a CRT monitor companion. The monitor's outer casing is
+unchanged; the screen shows two large glowing purple circles with no
+border and no pupils — the circles themselves are the eyes, styled after
+minimal console-mascot faces (no eyebrows, no mouth).
+
+- Eyes continuously track the mouse position across the whole page.
+- Eyes blink at random intervals by squashing flat and springing back.
+- After 5 minutes without any pointer, keyboard, scroll, or touch
+  activity, the eyes close further and a "zZz" indicator appears. Any
+  interaction wakes the screen instantly.
+- Four corner labels show live terminal-style status text (boot status,
+  terminal type, uptime timer, signal strength).
+- On page load the screen flickers through TV static and glitch bars for
+  about 2.5 seconds before settling; afterward it randomly glitches
+  briefly every 8–25 seconds to feel like an aging CRT tube.
+- All motion is skipped for users with `prefers-reduced-motion` enabled.
 
 Homepage post titles longer than the available row width are now
 truncated to a single line with an ellipsis.
