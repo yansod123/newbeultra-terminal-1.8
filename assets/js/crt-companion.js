@@ -2,6 +2,7 @@
   function ready(fn){if(document.readyState!=='loading'){fn();}else{document.addEventListener('DOMContentLoaded',fn);}}
 
   ready(function(){
+    var brand=document.querySelector('[data-crt-brand]');
     var screenEl=document.querySelector('[data-crt-screen]');
     if(screenEl){
       var face=screenEl.querySelector('[data-crt-face]');
@@ -10,6 +11,7 @@
       var statusEl=screenEl.querySelector('[data-crt-status]');
       var uptimeEl=screenEl.querySelector('[data-crt-uptime]');
       var sigEl=screenEl.querySelector('[data-crt-sig]');
+      var ledEl=document.querySelector('[data-crt-led]');
       var reduceMotion=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var startedAt=Date.now();
 
@@ -36,8 +38,8 @@
       for(var i=0;i<eyes.length;i++){
         springs.push({x:0,y:0,vx:0,vy:0,tx:0,ty:0});
       }
-      var STIFFNESS=0.18, DAMPING=0.72;
-      var maxOffset=26;
+      var STIFFNESS=0.32, DAMPING=0.62;
+      var maxOffset=15;
 
       var lastX=window.innerWidth/2, lastY=window.innerHeight/2;
 
@@ -50,17 +52,18 @@
           var dx=clientX-cx;
           var dy=clientY-cy;
           var dist=Math.sqrt(dx*dx+dy*dy)||1;
-          var clamped=Math.min(maxOffset,dist/6);
+          var clamped=Math.min(maxOffset,dist/4.2);
           springs[i].tx=(dx/dist)*clamped;
           springs[i].ty=(dy/dist)*clamped;
         }
       }
 
       var rafRunning=false;
+      function isReacting(){
+        return face.classList.contains('is-asleep')||face.classList.contains('is-blinking')||face.classList.contains('is-happy')||face.classList.contains('is-surprised')||face.classList.contains('is-curious');
+      }
       function springLoop(){
-        if(!face || face.classList.contains('is-asleep') || face.classList.contains('is-blinking')){
-          rafRunning=false;return;
-        }
+        if(!face || isReacting()){rafRunning=false;return;}
         var stillMoving=false;
         for(var i=0;i<eyes.length;i++){
           var s=springs[i];
@@ -70,7 +73,7 @@
           s.vy=(s.vy+ay)*DAMPING;
           s.x+=s.vx;
           s.y+=s.vy;
-          if(Math.abs(s.vx)>0.02||Math.abs(s.vy)>0.02||Math.abs(s.tx-s.x)>0.1||Math.abs(s.ty-s.y)>0.1)stillMoving=true;
+          if(Math.abs(s.vx)>0.03||Math.abs(s.vy)>0.03||Math.abs(s.tx-s.x)>0.15||Math.abs(s.ty-s.y)>0.15)stillMoving=true;
           eyes[i].style.setProperty('--ex',s.x.toFixed(1)+'px');
           eyes[i].style.setProperty('--ey',s.y.toFixed(1)+'px');
           eyes[i].style.transform='translate('+s.x.toFixed(1)+'px,'+s.y.toFixed(1)+'px)';
@@ -95,17 +98,40 @@
       var blinkTimer=null;
       function scheduleBlink(){
         if(reduceMotion || !face)return;
-        var delay=2500+Math.random()*4500;
+        var delay=2200+Math.random()*4000;
         blinkTimer=setTimeout(function(){
-          if(face.classList.contains('is-asleep')){scheduleBlink();return;}
+          if(isReacting() && !face.classList.contains('is-blinking')){scheduleBlink();return;}
           face.classList.add('is-blinking');
           setTimeout(function(){
             face.classList.remove('is-blinking');
             computeTargets(lastX,lastY);
             ensureLoop();
             scheduleBlink();
-          },130);
+          },110);
         },delay);
+      }
+
+      var REACTIONS=['is-happy','is-surprised','is-curious'];
+      var reacting=false;
+      function playReaction(){
+        if(reduceMotion || !face || reacting)return;
+        reacting=true;
+        var cls=REACTIONS[Math.floor(Math.random()*REACTIONS.length)];
+        face.classList.remove('is-blinking');
+        face.classList.add(cls);
+        if(ledEl)ledEl.classList.remove('is-off');
+        setTimeout(function(){
+          face.classList.remove(cls);
+          reacting=false;
+          computeTargets(lastX,lastY);
+          ensureLoop();
+        },480);
+      }
+      if(brand){
+        brand.addEventListener('click',function(e){e.preventDefault();playReaction();});
+        brand.addEventListener('keydown',function(e){
+          if(e.key==='Enter'||e.key===' '){e.preventDefault();playReaction();}
+        });
       }
 
       var IDLE_LIMIT=5*60*1000;
@@ -114,6 +140,7 @@
         if(!face)return;
         face.classList.add('is-asleep');
         if(zzz)zzz.classList.add('is-visible');
+        if(ledEl)ledEl.classList.add('is-off');
         setStatus('IDLE');
       }
       function wakeUp(){
@@ -121,6 +148,7 @@
         var wasAsleep=face.classList.contains('is-asleep');
         face.classList.remove('is-asleep');
         if(zzz)zzz.classList.remove('is-visible');
+        if(ledEl)ledEl.classList.remove('is-off');
         if(wasAsleep){computeTargets(lastX,lastY);ensureLoop();setStatus('OK');}
       }
       function registerActivity(){
@@ -151,8 +179,10 @@
 
       function bootSequence(){
         setStatus('BOOT');
+        if(ledEl)ledEl.classList.add('is-off');
         if(reduceMotion){
           setStatus('OK');
+          if(ledEl)ledEl.classList.remove('is-off');
           scheduleBlink();
           scheduleRandomGlitch();
           return;
@@ -161,6 +191,7 @@
         setTimeout(function(){
           screenEl.classList.remove('is-booting');
           setStatus('OK');
+          if(ledEl)ledEl.classList.remove('is-off');
           scheduleBlink();
           scheduleRandomGlitch();
         },2600);
