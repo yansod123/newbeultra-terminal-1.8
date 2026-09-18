@@ -1,7 +1,7 @@
 /*
 Theme Name: Newbeultra Terminal
 Description: Minimal no-image WordPress journal with terminal-style login and error pages.
-Version: 1.16.0
+Version: 1.17.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Text Domain: newbe-ultra-terminal
@@ -72,6 +72,7 @@ Text Domain: newbe-ultra-terminal
 
 .crt-scanlines,.crt-vignette,.crt-static,.crt-glitch{position:absolute;inset:0;pointer-events:none}
 .crt-scanlines{z-index:3;background:repeating-linear-gradient(0deg,transparent,transparent var(--crt-scan-gap,2px),rgba(0,0,0,var(--crt-scan-alpha,35%)) var(--crt-scan-gap,2px),rgba(0,0,0,var(--crt-scan-alpha,35%)) calc(var(--crt-scan-gap,2px) + var(--crt-scan-thickness,2px)))}
+body.crt-mode-pixel .crt-scanlines{background:repeating-linear-gradient(0deg,transparent,transparent var(--crt-pixel-gap,4px),rgba(0,0,0,var(--crt-pixel-alpha,35%)) var(--crt-pixel-gap,4px),rgba(0,0,0,var(--crt-pixel-alpha,35%)) calc(var(--crt-pixel-gap,4px) + var(--crt-pixel-thickness,1px))),repeating-linear-gradient(90deg,transparent,transparent var(--crt-pixel-gap,4px),rgba(0,0,0,var(--crt-pixel-alpha,35%)) var(--crt-pixel-gap,4px),rgba(0,0,0,var(--crt-pixel-alpha,35%)) calc(var(--crt-pixel-gap,4px) + var(--crt-pixel-thickness,1px)))}
 .crt-vignette{z-index:2;border-radius:11px;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.35) 75%,rgba(0,0,0,.7) 100%)}
 
 .crt-static{z-index:5;opacity:0;background-image:repeating-linear-gradient(0deg,color-mix(in srgb,var(--crt-color,#00ff41) 16%,transparent) 0,transparent 1px,transparent 2px,color-mix(in srgb,var(--crt-color,#00ff41) 10%,transparent) 3px),repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0,transparent 2px);mix-blend-mode:screen}
