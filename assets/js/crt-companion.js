@@ -207,5 +207,37 @@
     }
     footerClock();
     setInterval(footerClock,1000);
+
+    var reduceMotionGlobal=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scrambleEl=document.querySelector('.led-status .state-ready');
+    if(scrambleEl && !reduceMotionGlobal){
+      var SCRAMBLE_CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*<>/\\|';
+      var SCRAMBLE_TARGET=scrambleEl.textContent;
+      var frame=0;
+      var TOTAL_FRAMES=18;
+      var FRAME_MS=35;
+      var HOLD_MS=900;
+      function scrambleRevealAt(i){return 4+i*1.4;}
+      function scrambleTick(){
+        var out='';
+        for(var i=0;i<SCRAMBLE_TARGET.length;i++){
+          if(frame>=scrambleRevealAt(i)){
+            out+=SCRAMBLE_TARGET[i];
+          }else if(SCRAMBLE_TARGET[i]===' '){
+            out+=' ';
+          }else{
+            out+=SCRAMBLE_CHARS[Math.floor(Math.random()*SCRAMBLE_CHARS.length)];
+          }
+        }
+        scrambleEl.textContent=out;
+        frame++;
+        if(frame>TOTAL_FRAMES){
+          setTimeout(function(){frame=0;scrambleTick();},HOLD_MS);
+        }else{
+          setTimeout(scrambleTick,FRAME_MS);
+        }
+      }
+      scrambleTick();
+    }
   });
 })();

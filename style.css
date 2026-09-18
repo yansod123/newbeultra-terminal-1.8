@@ -1,7 +1,7 @@
 /*
 Theme Name: Newbeultra Terminal
 Description: Minimal no-image WordPress journal with terminal-style login and error pages.
-Version: 1.17.0
+Version: 1.18.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Text Domain: newbe-ultra-terminal
@@ -48,7 +48,7 @@ Text Domain: newbe-ultra-terminal
 
 .crt-face{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:15px;overflow:visible}
 .crt-eye{
-  position:relative;width:34px;height:34px;border-radius:50%;
+  position:relative;width:68px;height:68px;border-radius:50%;
   background:var(--crt-color,#00ff41);
   box-shadow:0 0 calc(4px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(8px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(15px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(30px * var(--crt-glow-mult,1)) color-mix(in srgb,var(--crt-color,#00ff41) 60%,transparent);
   transform:translate(0,0) scale(1,1);
