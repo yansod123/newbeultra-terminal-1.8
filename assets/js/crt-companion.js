@@ -11,7 +11,6 @@
       var statusEl=screenEl.querySelector('[data-crt-status]');
       var uptimeEl=screenEl.querySelector('[data-crt-uptime]');
       var sigEl=screenEl.querySelector('[data-crt-sig]');
-      var ledEl=document.querySelector('[data-crt-led]');
       var reduceMotion=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var startedAt=Date.now();
 
@@ -119,7 +118,6 @@
         var cls=REACTIONS[Math.floor(Math.random()*REACTIONS.length)];
         face.classList.remove('is-blinking');
         face.classList.add(cls);
-        if(ledEl)ledEl.classList.remove('is-off');
         setTimeout(function(){
           face.classList.remove(cls);
           reacting=false;
@@ -140,7 +138,6 @@
         if(!face)return;
         face.classList.add('is-asleep');
         if(zzz)zzz.classList.add('is-visible');
-        if(ledEl)ledEl.classList.add('is-off');
         setStatus('IDLE');
       }
       function wakeUp(){
@@ -148,7 +145,6 @@
         var wasAsleep=face.classList.contains('is-asleep');
         face.classList.remove('is-asleep');
         if(zzz)zzz.classList.remove('is-visible');
-        if(ledEl)ledEl.classList.remove('is-off');
         if(wasAsleep){computeTargets(lastX,lastY);ensureLoop();setStatus('OK');}
       }
       function registerActivity(){
@@ -179,10 +175,8 @@
 
       function bootSequence(){
         setStatus('BOOT');
-        if(ledEl)ledEl.classList.add('is-off');
         if(reduceMotion){
           setStatus('OK');
-          if(ledEl)ledEl.classList.remove('is-off');
           scheduleBlink();
           scheduleRandomGlitch();
           return;
@@ -191,7 +185,6 @@
         setTimeout(function(){
           screenEl.classList.remove('is-booting');
           setStatus('OK');
-          if(ledEl)ledEl.classList.remove('is-off');
           scheduleBlink();
           scheduleRandomGlitch();
         },2600);
