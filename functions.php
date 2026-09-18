@@ -1,5 +1,5 @@
 <?php
-if(!defined('ABSPATH'))exit;define('NBU_T_VER','1.21.0');
+if(!defined('ABSPATH'))exit;define('NBU_T_VER','1.22.0');
 function nbu_t_setup(){add_theme_support('title-tag');add_theme_support('post-thumbnails');}add_action('after_setup_theme','nbu_t_setup');
 function nbu_t_assets(){wp_enqueue_style('nbu-terminal',get_stylesheet_uri(),array(),NBU_T_VER);wp_enqueue_script('nbu-terminal',get_template_directory_uri().'/assets/js/app.js',array(),NBU_T_VER,true);wp_enqueue_script('nbu-terminal-crt',get_template_directory_uri().'/assets/js/crt-companion.js',array(),NBU_T_VER,true);}add_action('wp_enqueue_scripts','nbu_t_assets');
 function nbu_t_login_style(){wp_enqueue_style('nbu-terminal-login',get_template_directory_uri().'/assets/css/login.css',array(),NBU_T_VER);}add_action('login_enqueue_scripts','nbu_t_login_style');
