@@ -39,7 +39,7 @@
         springs.push({x:0,y:0,vx:0,vy:0,tx:0,ty:0});
       }
       var STIFFNESS=0.32, DAMPING=0.62;
-      var maxOffset=15;
+      var maxOffset=32;
 
       var lastX=window.innerWidth/2, lastY=window.innerHeight/2;
 
@@ -52,7 +52,7 @@
           var dx=clientX-cx;
           var dy=clientY-cy;
           var dist=Math.sqrt(dx*dx+dy*dy)||1;
-          var clamped=Math.min(maxOffset,dist/4.2);
+          var clamped=Math.min(maxOffset,dist/3);
           springs[i].tx=(dx/dist)*clamped;
           springs[i].ty=(dy/dist)*clamped;
         }
