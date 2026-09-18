@@ -1,7 +1,7 @@
 /*
 Theme Name: Newbeultra Terminal
 Description: Minimal no-image WordPress journal with terminal-style login and error pages.
-Version: 1.11.0
+Version: 1.11.1
 Requires at least: 6.0
 Requires PHP: 7.4
 Text Domain: newbe-ultra-terminal
@@ -60,9 +60,10 @@ Text Domain: newbe-ultra-terminal
 @media(max-width:820px){.crt-brand{padding-bottom:30px}}
 @media(prefers-reduced-motion:reduce){.crt-screen{animation:none!important}.crt-zzz.is-visible,.crt-static,.crt-glitch{animation:none!important}.crt-screen.is-booting .crt-static,.crt-screen.is-booting .crt-glitch,.crt-screen.is-glitching .crt-static,.crt-screen.is-glitching .crt-glitch{opacity:0!important}}
 
-/* ---- Homepage post titles: single line with ellipsis overflow ---- */
-.post-title{display:inline-block;max-width:280px;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align:bottom}
-@media(max-width:820px){.post-title{max-width:150px}}
+/* ---- Homepage post titles: single line with ellipsis overflow (fixed: pill no longer stretches) ---- */
+.post-row > .pill{flex-shrink:0;display:inline-flex;white-space:nowrap;width:max-content}
+.post-title{display:inline-block;max-width:220px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;vertical-align:bottom}
+@media(max-width:820px){.post-title{max-width:120px}}
 
 /* ---- Site-wide fixed terminal footer ---- */
 .site-footer{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;height:38px;padding:0 22px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(6px);border-top:1px solid var(--line);font:11px var(--mono);color:var(--muted);letter-spacing:.03em}
