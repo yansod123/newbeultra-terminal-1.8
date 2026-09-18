@@ -1,7 +1,7 @@
 /*
 Theme Name: Newbeultra Terminal
 Description: Minimal no-image WordPress journal with terminal-style login and error pages.
-Version: 1.19.0
+Version: 1.21.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Text Domain: newbe-ultra-terminal
@@ -49,7 +49,7 @@ Text Domain: newbe-ultra-terminal
 
 .crt-face{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;overflow:visible}
 .crt-eye{
-  position:relative;width:66.6667cqh;height:66.6667cqh;border-radius:50%;
+  position:relative;width:var(--crt-eye-w,40cqw);height:var(--crt-eye-h,40cqh);border-radius:var(--crt-eye-radius,50%);
   flex-shrink:0;
   background:var(--crt-color,#00ff41);
   box-shadow:0 0 calc(4px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(8px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(15px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(30px * var(--crt-glow-mult,1)) color-mix(in srgb,var(--crt-color,#00ff41) 60%,transparent);
@@ -62,6 +62,7 @@ Text Domain: newbe-ultra-terminal
 .crt-face.is-surprised .crt-eye{transform:translate(var(--ex,0),var(--ey,0)) scale(1.28,1.28)!important}
 .crt-face.is-curious .crt-eye:nth-child(1){transform:translate(calc(var(--ex,0) - 2px),calc(var(--ey,0) - 3px)) scale(.85,1.15)!important}
 .crt-face.is-curious .crt-eye:nth-child(2){transform:translate(calc(var(--ex,0) + 2px),calc(var(--ey,0) + 3px)) scale(1.15,.85)!important}
+.crt-face.is-smiling .crt-eye{transform:translate(var(--ex,0),var(--ey,0)) scaleY(.4)!important;border-radius:0 0 100% 100%!important}
 
 .crt-zzz{display:none;position:absolute;top:8px;right:10px;z-index:2;color:var(--crt-color,#00ff41);font:11px var(--mono);letter-spacing:.04em;opacity:0;text-shadow:0 0 6px color-mix(in srgb,var(--crt-color,#00ff41) 70%,transparent)}
 .crt-zzz.is-visible{display:block;animation:crtZzz 2.6s ease-in-out infinite}

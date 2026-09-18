@@ -60,7 +60,7 @@
 
       var rafRunning=false;
       function isReacting(){
-        return face.classList.contains('is-asleep')||face.classList.contains('is-blinking')||face.classList.contains('is-happy')||face.classList.contains('is-surprised')||face.classList.contains('is-curious');
+        return face.classList.contains('is-asleep')||face.classList.contains('is-blinking')||face.classList.contains('is-happy')||face.classList.contains('is-surprised')||face.classList.contains('is-curious')||face.classList.contains('is-smiling');
       }
       function springLoop(){
         if(!face || isReacting()){rafRunning=false;return;}
@@ -111,7 +111,7 @@
         },delay);
       }
 
-      var REACTIONS=['is-happy','is-surprised','is-curious'];
+      var REACTIONS=['is-happy','is-surprised','is-curious','is-smiling'];
       var reacting=false;
       function playReaction(){
         if(reduceMotion || !face || reacting)return;
@@ -119,12 +119,13 @@
         var cls=REACTIONS[Math.floor(Math.random()*REACTIONS.length)];
         face.classList.remove('is-blinking');
         face.classList.add(cls);
+        var duration=cls==='is-smiling'?680:480;
         setTimeout(function(){
           face.classList.remove(cls);
           reacting=false;
           computeTargets(lastX,lastY);
           ensureLoop();
-        },480);
+        },duration);
       }
       if(brand){
         brand.addEventListener('click',function(e){e.preventDefault();playReaction();});

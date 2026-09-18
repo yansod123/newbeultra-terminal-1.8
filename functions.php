@@ -1,5 +1,5 @@
 <?php
-if(!defined('ABSPATH'))exit;define('NBU_T_VER','1.19.0');
+if(!defined('ABSPATH'))exit;define('NBU_T_VER','1.21.0');
 function nbu_t_setup(){add_theme_support('title-tag');add_theme_support('post-thumbnails');}add_action('after_setup_theme','nbu_t_setup');
 function nbu_t_assets(){wp_enqueue_style('nbu-terminal',get_stylesheet_uri(),array(),NBU_T_VER);wp_enqueue_script('nbu-terminal',get_template_directory_uri().'/assets/js/app.js',array(),NBU_T_VER,true);wp_enqueue_script('nbu-terminal-crt',get_template_directory_uri().'/assets/js/crt-companion.js',array(),NBU_T_VER,true);}add_action('wp_enqueue_scripts','nbu_t_assets');
 function nbu_t_login_style(){wp_enqueue_style('nbu-terminal-login',get_template_directory_uri().'/assets/css/login.css',array(),NBU_T_VER);}add_action('login_enqueue_scripts','nbu_t_login_style');
@@ -58,6 +58,12 @@ $c->add_setting('nbu_t_crt_glow',array('default'=>50,'sanitize_callback'=>'absin
 
 $c->add_setting('nbu_t_crt_edge_glow',array('default'=>60,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_edge_glow',array('section'=>'nbu_t_crt','label'=>'屏幕边缘内发光强度','description'=>'单独控制屏幕四周内壁辉光的明亮程度，数值越大边缘发光越明显','input_attrs'=>array('min'=>0,'max'=>150,'step'=>5))));
 
+$c->add_setting('nbu_t_crt_eye_width',array('default'=>40,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_eye_width',array('section'=>'nbu_t_crt','label'=>'眼睛宽度','description'=>'占屏幕宽度的百分比，数值越大眼睛越宽','input_attrs'=>array('min'=>5,'max'=>80,'step'=>1))));
+
+$c->add_setting('nbu_t_crt_eye_height',array('default'=>40,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_eye_height',array('section'=>'nbu_t_crt','label'=>'眼睛高度','description'=>'占屏幕高度的百分比，数值越大眼睛越高。宽高相等即为正方形/圆形，不等则为长方形','input_attrs'=>array('min'=>5,'max'=>80,'step'=>1))));
+
+$c->add_setting('nbu_t_crt_eye_radius',array('default'=>50,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_eye_radius',array('section'=>'nbu_t_crt','label'=>'眼睛圆角','description'=>'0为直角方形，50为完全圆形，中间数值为圆角矩形','input_attrs'=>array('min'=>0,'max'=>50,'step'=>1))));
+
 $c->add_section('nbu_t_led',array('title'=>'顶部状态 LED','priority'=>32,'description'=>'主页右上角的网络终端主题顶栏状态指示灯'));
 
 $c->add_setting('nbu_t_led_color',array('default'=>'#51d6a7','sanitize_callback'=>'sanitize_hex_color'));$c->add_control(new WP_Customize_Color_Control($c,'nbu_t_led_color',array('section'=>'nbu_t_led','label'=>'LED 颜色','description'=>'就绪状态下的指示灯颜色')));
@@ -93,6 +99,10 @@ $pixelAlphaPct=absint(get_theme_mod('nbu_t_crt_pixel_alpha',35));$x.='--crt-pixe
 $glowPct=absint(get_theme_mod('nbu_t_crt_glow',50));$x.='--crt-glow-mult:'.round($glowPct/50,2).';';
 
 $edgePct=absint(get_theme_mod('nbu_t_crt_edge_glow',60));$x.='--crt-edge-glow-mult:'.round($edgePct/50,2).';';
+
+$eyeW=absint(get_theme_mod('nbu_t_crt_eye_width',40));$x.='--crt-eye-w:'.$eyeW.'cqw;';
+$eyeH=absint(get_theme_mod('nbu_t_crt_eye_height',40));$x.='--crt-eye-h:'.$eyeH.'cqh;';
+$eyeR=absint(get_theme_mod('nbu_t_crt_eye_radius',50));$x.='--crt-eye-radius:'.$eyeR.'%;';
 
 $ledBrightness=absint(get_theme_mod('nbu_t_led_brightness',100));$x.='--led-brightness:'.round($ledBrightness/100,2).';';
 $ledSpeed=absint(get_theme_mod('nbu_t_led_speed',26));$x.='--led-speed:'.round($ledSpeed/10,2).'s;';
