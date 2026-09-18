@@ -1,7 +1,7 @@
 /*
 Theme Name: Newbeultra Terminal
 Description: Minimal no-image WordPress journal with terminal-style login and error pages.
-Version: 1.18.0
+Version: 1.19.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Text Domain: newbe-ultra-terminal
@@ -38,6 +38,7 @@ Text Domain: newbe-ultra-terminal
   background:#0a0a0a;
   border-radius:11px;
   aspect-ratio:1/0.7;
+  container-type:size;
   box-shadow:
     inset 0 0 40px rgba(0,0,0,.75),
     0 0 0 2px #141416,
@@ -46,9 +47,10 @@ Text Domain: newbe-ultra-terminal
   animation:crtFlicker 6s infinite ease-in-out;
 }
 
-.crt-face{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:15px;overflow:visible}
+.crt-face{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;overflow:visible}
 .crt-eye{
-  position:relative;width:68px;height:68px;border-radius:50%;
+  position:relative;width:66.6667cqh;height:66.6667cqh;border-radius:50%;
+  flex-shrink:0;
   background:var(--crt-color,#00ff41);
   box-shadow:0 0 calc(4px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(8px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(15px * var(--crt-glow-mult,1)) var(--crt-color,#00ff41),0 0 calc(30px * var(--crt-glow-mult,1)) color-mix(in srgb,var(--crt-color,#00ff41) 60%,transparent);
   transform:translate(0,0) scale(1,1);
