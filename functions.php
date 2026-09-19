@@ -6,6 +6,11 @@ function nbu_t_login_style(){wp_enqueue_style('nbu-terminal-login',get_template_
 function nbu_t_login_brand($url){return home_url('/');}add_filter('login_headerurl','nbu_t_login_brand');
 function nbu_t_login_title($title){return esc_html(get_bloginfo('name')).' — Sign in';}add_filter('login_headertext','nbu_t_login_title');
 
+function nbu_t_customizer_admin_css(){
+	wp_add_inline_style('customize-controls','.customize-control-nbu_t_range input[type=range]{width:100%}.customize-control-nbu_t_range output{display:block;text-align:right;font-size:11px;color:#777}');
+}
+add_action('customize_controls_print_styles','nbu_t_customizer_admin_css');
+
 if(class_exists('WP_Customize_Control') && !class_exists('NBU_T_Range_Control')){
 class NBU_T_Range_Control extends WP_Customize_Control {
     public $type='nbu_t_range';
@@ -18,8 +23,8 @@ class NBU_T_Range_Control extends WP_Customize_Control {
         <label>
             <?php if(!empty($this->label)):?><span class="customize-control-title"><?php echo esc_html($this->label);?></span><?php endif;?>
             <?php if(!empty($this->description)):?><span class="description customize-control-description"><?php echo esc_html($this->description);?></span><?php endif;?>
-            <input type="range" min="<?php echo esc_attr($min);?>" max="<?php echo esc_attr($max);?>" step="<?php echo esc_attr($step);?>" value="<?php echo esc_attr($this->value());?>" style="width:100%" <?php $this->link();?> oninput="this.nextElementSibling.textContent=this.value">
-            <output style="display:block;text-align:right;font-size:11px;color:#777;"><?php echo esc_html($this->value());?></output>
+            <input type="range" min="<?php echo esc_attr($min);?>" max="<?php echo esc_attr($max);?>" step="<?php echo esc_attr($step);?>" value="<?php echo esc_attr($this->value());?>" <?php $this->link();?> oninput="this.nextElementSibling.textContent=this.value">
+            <output><?php echo esc_html($this->value());?></output>
         </label>
         <?php
     }
