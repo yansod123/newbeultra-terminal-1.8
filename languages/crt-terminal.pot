@@ -1,0 +1,134 @@
+# Copyright (C) 2026 Newbeultra
+# This file is distributed under the same license as the CRT Terminal theme.
+msgid ""
+msgstr ""
+"Project-Id-Version: CRT Terminal 1.22.0\n"
+"Report-Msgid-Bugs-To: https://github.com/yansod123/wordpress-crt-terminal-theme/issues\n"
+"POT-Creation-Date: 2026-09-19 03:50+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-09-19 03:50+0000\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: manual\n"
+"X-Domain: crt-terminal\n"
+
+#: front-page.php:1
+msgid "All"
+msgstr ""
+
+#: front-page.php:1
+msgid "Uncategorized"
+msgstr ""
+
+#: front-page.php:1
+msgid "LATEST"
+msgstr ""
+
+#: front-page.php:1
+msgid "No entries yet. Go to Admin → Posts → Add New to publish; it will appear here automatically."
+msgstr ""
+
+#: front-page.php:1
+msgid "0 results / no matching entries found"
+msgstr ""
+
+#: front-page.php:1
+msgid "Workspace Activity"
+msgstr ""
+
+#: front-page.php:1
+msgid "LOG / CATEGORIES / RECENT UPDATES"
+msgstr ""
+
+#: front-page.php:1
+msgid "Recent posts"
+msgstr ""
+
+#: front-page.php:1, header.php:1
+msgid "Categories"
+msgstr ""
+
+#: front-page.php:1
+msgid "Create categories in Posts"
+msgstr ""
+
+#: single.php:1
+msgid "JOURNAL"
+msgstr ""
+
+#: header.php:1
+msgid "Skip to content"
+msgstr ""
+
+#: header.php:1
+msgid "Terminal companion, click to interact"
+msgstr ""
+
+#: header.php:1
+msgid "Workspace"
+msgstr ""
+
+#: header.php:1
+msgid "Articles"
+msgstr ""
+
+#: header.php:1
+msgid "Archive"
+msgstr ""
+
+#: header.php:1
+msgid "Links"
+msgstr ""
+
+#: header.php:1
+msgid "Write post"
+msgstr ""
+
+#: header.php:1
+msgid "Dashboard"
+msgstr ""
+
+#: header.php:1
+msgid "Sign out"
+msgstr ""
+
+#: header.php:1
+msgid "Sign in"
+msgstr ""
+
+#: header.php:1
+msgid "Back to top"
+msgstr ""
+
+#: header.php:1
+msgid "Home"
+msgstr ""
+
+#: header.php:1
+msgid "Initializing"
+msgstr ""
+
+#: header.php:1
+msgid "Available"
+msgstr ""
+
+#: 404.php:1
+msgid "Route not found."
+msgstr ""
+
+#: 404.php:1
+msgid "The requested page does not exist, may have moved, or its address may be incorrect. Return to the workspace or browse the article archive."
+msgstr ""
+
+#: 404.php:1
+msgid "Return to workspace"
+msgstr ""
+
+#: 404.php:1
+msgid "Browse articles"
+msgstr ""
+
+#: footer.php:1
+msgid "Back to Home"
+msgstr ""
