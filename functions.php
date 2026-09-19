@@ -7,7 +7,7 @@ function nbu_t_login_brand($url){return home_url('/');}add_filter('login_headeru
 function nbu_t_login_title($title){return esc_html(get_bloginfo('name')).' — Sign in';}add_filter('login_headertext','nbu_t_login_title');
 
 function nbu_t_customizer_admin_css(){
-	wp_add_inline_style('customize-controls','.customize-control-nbu_t_range input[type=range]{width:100%}.customize-control-nbu_t_range output{display:block;text-align:right;font-size:11px;color:#777}');
+wp_add_inline_style('customize-controls','.customize-control-nbu_t_range input[type=range]{width:100%}.customize-control-nbu_t_range output{display:block;text-align:right;font-size:11px;color:#777}.nbu-t-font-source{display:flex;gap:14px;margin:6px 0}.nbu-t-font-panel{margin-top:6px}.nbu-t-font-check-result{margin-left:8px;font-size:12px}.nbu-t-font-check-result.ok{color:#2e7d32}.nbu-t-font-check-result.fail{color:#c0392b}.nbu-t-font-filename{font-size:12px;color:#777;margin-left:6px}');
 }
 add_action('customize_controls_print_styles','nbu_t_customizer_admin_css');
 
@@ -30,6 +30,70 @@ class NBU_T_Range_Control extends WP_Customize_Control {
     }
 }
 }
+
+if(class_exists('WP_Customize_Control') && !class_exists('NBU_T_Font_Control')){
+class NBU_T_Font_Control extends WP_Customize_Control {
+    public $type='nbu_t_font';
+    public function enqueue(){
+        wp_enqueue_script('nbu-t-font-control',get_template_directory_uri().'/assets/js/font-control.js',array('customize-controls','jquery'),NBU_T_VER,true);
+        wp_localize_script('nbu-t-font-control','nbuTFontControl',array('ajaxUrl'=>admin_url('admin-ajax.php'),'nonce'=>wp_create_nonce('nbu_t_font_check')));
+    }
+    public function render_content(){
+        $sourceKey=$this->id.'_source';
+        $urlKey=$this->id.'_url';
+        $source=get_theme_mod($sourceKey,'upload');
+        $url=get_theme_mod($urlKey,'');
+        $attId=absint($this->value());
+        $fileName=$attId?basename(get_attached_file($attId)):'';
+        ?>
+        <label class="nbu-t-font-label"><?php if(!empty($this->label)):?><span class="customize-control-title"><?php echo esc_html($this->label);?></span><?php endif;?>
+        <?php if(!empty($this->description)):?><span class="description customize-control-description"><?php echo esc_html($this->description);?></span><?php endif;?></label>
+        <div class="nbu-t-font-source" data-field-id="<?php echo esc_attr($this->id);?>">
+            <label><input type="radio" class="nbu-t-font-source-radio" name="<?php echo esc_attr($this->id);?>_source_radio" value="upload" <?php checked($source,'upload');?>> 本地上传</label>
+            <label><input type="radio" class="nbu-t-font-source-radio" name="<?php echo esc_attr($this->id);?>_source_radio" value="url" <?php checked($source,'url');?>> 在线链接</label>
+        </div>
+        <div class="nbu-t-font-panel nbu-t-font-panel-upload" style="<?php echo $source==='upload'?'':'display:none';?>">
+            <input type="hidden" class="nbu-t-font-attachment-field" data-sync-field="<?php echo esc_attr($this->id);?>" value="<?php echo esc_attr($attId);?>">
+            <button type="button" class="button nbu-t-font-upload">选择文件</button> <span class="nbu-t-font-filename"><?php echo esc_html($fileName);?></span>
+        </div>
+        <div class="nbu-t-font-panel nbu-t-font-panel-url" style="<?php echo $source==='url'?'':'display:none';?>">
+            <input type="url" class="nbu-t-font-url-input" data-sync-field="<?php echo esc_attr($urlKey);?>" placeholder="https://example.com/font.woff2" value="<?php echo esc_attr($url);?>" style="width:100%">
+            <button type="button" class="button nbu-t-font-check" style="margin-top:6px">检测链接</button>
+            <span class="nbu-t-font-check-result" aria-live="polite"></span>
+        </div>
+        <input type="hidden" class="nbu-t-font-source-field" data-sync-field="<?php echo esc_attr($sourceKey);?>" value="<?php echo esc_attr($source);?>">
+        <?php
+    }
+}
+}
+
+function nbu_t_ajax_check_font_url(){
+check_ajax_referer('nbu_t_font_check','nonce');
+if(!current_user_can('customize')){wp_send_json_error(array('message'=>'权限不足'));}
+$url=isset($_POST['url'])?sanitize_text_field(wp_unslash($_POST['url'])):'';
+if(!$url||!wp_http_validate_url($url)){wp_send_json_error(array('message'=>'链接格式无效'));}
+$validTypes=array('font/woff2','font/woff','font/ttf','font/otf','application/font-woff2','application/font-woff','application/x-font-woff','application/octet-stream');
+$checkResponse=function($resp)use($validTypes,$url){
+    if(is_wp_error($resp))return null;
+    $code=wp_remote_retrieve_response_code($resp);
+    $type=wp_remote_retrieve_header($resp,'content-type');
+    $typeOk=false;foreach($validTypes as $t){if($type&&stripos($type,$t)!==false){$typeOk=true;break;}}
+    if(!$typeOk&&preg_match('/\.(woff2|woff|ttf|otf)$/i',$url))$typeOk=true;
+    return array('code'=>$code,'typeOk'=>$typeOk);
+};
+$resp=wp_remote_head($url,array('timeout'=>8,'redirection'=>3));
+$result=$checkResponse($resp);
+if(!$result||$result['code']<200||$result['code']>=400||!$result['typeOk']){
+    $getResp=wp_remote_get($url,array('timeout'=>8,'redirection'=>3,'headers'=>array('Range'=>'bytes=0-1023')));
+    $getResult=$checkResponse($getResp);
+    if($getResult&&$getResult['code']>=200&&$getResult['code']<400&&$getResult['typeOk']){
+        wp_send_json_success(array('message'=>'链接可用'));
+    }
+    wp_send_json_error(array('message'=>'未检测到有效字体文件，字体可能无法正常加载'));
+}
+wp_send_json_success(array('message'=>'链接可用'));
+}
+add_action('wp_ajax_nbu_t_check_font_url','nbu_t_ajax_check_font_url');
 
 function nbu_t_customize($c){
 $c->add_section('nbu_t',array('title'=>'新欧拉主题外观','priority'=>30));
@@ -68,6 +132,16 @@ $c->add_setting('nbu_t_crt_eye_width',array('default'=>40,'sanitize_callback'=>'
 $c->add_setting('nbu_t_crt_eye_height',array('default'=>40,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_eye_height',array('section'=>'nbu_t_crt','label'=>'眼睛高度','description'=>'占屏幕高度的百分比，数值越大眼睛越高。宽高相等即为正方形/圆形，不等则为长方形','input_attrs'=>array('min'=>5,'max'=>80,'step'=>1))));
 
 $c->add_setting('nbu_t_crt_eye_radius',array('default'=>50,'sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Range_Control($c,'nbu_t_crt_eye_radius',array('section'=>'nbu_t_crt','label'=>'眼睛圆角','description'=>'0为直角方形，50为完全圆形，中间数值为圆角矩形','input_attrs'=>array('min'=>0,'max'=>50,'step'=>1))));
+
+$c->add_section('nbu_t_fonts',array('title'=>'字体设置','priority'=>33,'description'=>'支持本地上传或填写在线链接（woff2），适用于任意语言；未设定则自动回退到系统字体'));
+
+$c->add_setting('nbu_t_font_sans',array('default'=>'','sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Font_Control($c,'nbu_t_font_sans',array('section'=>'nbu_t_fonts','label'=>'正文字体','description'=>'用于正文、标题、导航等文字，支持任意语言。支持可变字体（variable font）')));
+$c->add_setting('nbu_t_font_sans_source',array('default'=>'upload','sanitize_callback'=>'sanitize_key'));
+$c->add_setting('nbu_t_font_sans_url',array('default'=>'','sanitize_callback'=>'esc_url_raw'));
+
+$c->add_setting('nbu_t_font_mono',array('default'=>'','sanitize_callback'=>'absint'));$c->add_control(new NBU_T_Font_Control($c,'nbu_t_font_mono',array('section'=>'nbu_t_fonts','label'=>'等宽字体','description'=>'用于代码块、时间戳等等宽文字，支持任意语言。支持可变字体（variable font）')));
+$c->add_setting('nbu_t_font_mono_source',array('default'=>'upload','sanitize_callback'=>'sanitize_key'));
+$c->add_setting('nbu_t_font_mono_url',array('default'=>'','sanitize_callback'=>'esc_url_raw'));
 
 $c->add_section('nbu_t_led',array('title'=>'顶部状态 LED','priority'=>32,'description'=>'主页右上角的网络终端主题顶栏状态指示灯'));
 
@@ -113,14 +187,22 @@ $ledBrightness=absint(get_theme_mod('nbu_t_led_brightness',100));$x.='--led-brig
 $ledSpeed=absint(get_theme_mod('nbu_t_led_speed',26));$x.='--led-speed:'.round($ledSpeed/10,2).'s;';
 $x.='--led-color:'.(sanitize_hex_color(get_theme_mod('nbu_t_led_color','#51d6a7'))?:'#51d6a7').';';
 
-$x.='}';wp_add_inline_style('nbu-terminal',$x);}add_action('wp_enqueue_scripts','nbu_t_vars',20);
+$sansSource=get_theme_mod('nbu_t_font_sans_source','upload');$monoSource=get_theme_mod('nbu_t_font_mono_source','upload');
+$sansUrl='';$monoUrl='';
+if($sansSource==='url'){$sansUrl=esc_url_raw(get_theme_mod('nbu_t_font_sans_url',''));}else{$sid=absint(get_theme_mod('nbu_t_font_sans',0));if($sid)$sansUrl=wp_get_attachment_url($sid);}
+if($monoSource==='url'){$monoUrl=esc_url_raw(get_theme_mod('nbu_t_font_mono_url',''));}else{$mid=absint(get_theme_mod('nbu_t_font_mono',0));if($mid)$monoUrl=wp_get_attachment_url($mid);}
+$faceCss='';
+if($sansUrl){$faceCss.="@font-face{font-family:'NBUCustomSans';src:url('".esc_url($sansUrl)."') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}";$x.="--font:'NBUCustomSans',-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Hiragino Sans GB\",\"Microsoft YaHei\",sans-serif;";}
+if($monoUrl){$faceCss.="@font-face{font-family:'NBUCustomMono';src:url('".esc_url($monoUrl)."') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}";$x.="--mono:'NBUCustomMono','SFMono-Regular',Consolas,\"Liberation Mono\",monospace;";}
+
+$x.='}';if($faceCss)$x=$faceCss.$x;wp_add_inline_style('nbu-terminal',$x);}add_action('wp_enqueue_scripts','nbu_t_vars',20);
 
 /* ---- Block editor / drag-and-drop builder compatibility (theme.json bridge) ---- */
 function nbu_t_block_editor_support(){
-	add_theme_support('wp-block-styles');
-	add_theme_support('align-wide');
-	add_theme_support('responsive-embeds');
-	add_theme_support('editor-styles');
-	add_editor_style('style.css');
+add_theme_support('wp-block-styles');
+add_theme_support('align-wide');
+add_theme_support('responsive-embeds');
+add_theme_support('editor-styles');
+add_editor_style('style.css');
 }
 add_action('after_setup_theme','nbu_t_block_editor_support');
