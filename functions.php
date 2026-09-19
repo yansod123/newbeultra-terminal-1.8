@@ -4,7 +4,7 @@ function nbu_t_setup(){add_theme_support('title-tag');add_theme_support('post-th
 function nbu_t_assets(){wp_enqueue_style('nbu-terminal',get_stylesheet_uri(),array(),NBU_T_VER);wp_enqueue_script('nbu-terminal',get_template_directory_uri().'/assets/js/app.js',array(),NBU_T_VER,true);wp_enqueue_script('nbu-terminal-crt',get_template_directory_uri().'/assets/js/crt-companion.js',array(),NBU_T_VER,true);}add_action('wp_enqueue_scripts','nbu_t_assets');
 function nbu_t_login_style(){wp_enqueue_style('nbu-terminal-login',get_template_directory_uri().'/assets/css/login.css',array(),NBU_T_VER);}add_action('login_enqueue_scripts','nbu_t_login_style');
 function nbu_t_login_brand($url){return home_url('/');}add_filter('login_headerurl','nbu_t_login_brand');
-function nbu_t_login_title($title){return get_bloginfo('name').' — Sign in';}add_filter('login_headertext','nbu_t_login_title');
+function nbu_t_login_title($title){return esc_html(get_bloginfo('name')).' — Sign in';}add_filter('login_headertext','nbu_t_login_title');
 
 if(class_exists('WP_Customize_Control') && !class_exists('NBU_T_Range_Control')){
 class NBU_T_Range_Control extends WP_Customize_Control {
@@ -82,9 +82,9 @@ return $classes;
 
 function nbu_t_vars(){ $ps=array('termius'=>array('#171924','#1d2033','#282b3d','#30344b','#ddddea','#a9abbb','#777b92','#7c83ff','#51d6a7','#f5c76e'),'nord'=>array('#2e3440','#292e39','#3b4252','#434c5e','#eceff4','#d8dee9','#81a1c1','#88c0d0','#a3be8c','#ebcb8b'),'dracula'=>array('#282a36','#21222c','#343746','#414558','#f8f8f2','#d9d5ef','#8b89a6','#bd93f9','#50fa7b','#f1fa8c'),'monokai'=>array('#272822','#20211d','#35362f','#414339','#f8f8f2','#d5d6c8','#8e9283','#a6e22e','#a6e22e','#e6db74'),'hackerblue'=>array('#071824','#0a2131','#0d2b3e','#12354b','#d8f1ff','#a9c9db','#668da2','#32a7ff','#2fe0a1','#f4cd70'),'hackergreen'=>array('#07130d','#0b1b12','#102519','#163322','#d8f7df','#a5ccb0','#5f8e6c','#4eea83','#4eea83','#e6d75d'),'flexoki'=>array('#1c1b1a','#242321','#302e2b','#3a3835','#cecdc3','#b7b5ac','#87847b','#d0a215','#879a39','#d0a215'),'light'=>array('#f4f5f8','#ffffff','#ffffff','#edf0f7','#20222a','#515767','#7a8090','#5765d9','#248b64','#a96b13'));$v=$ps[get_theme_mod('nbu_t_palette','termius')]??$ps['termius'];$n=array('--bg','--side','--panel','--raise','--text','--sub','--muted','--accent','--ok','--warn');$x=':root{';foreach($n as $i=>$k)$x.=$k.':'.$v[$i].';';$x.='--radius:'.absint(get_theme_mod('nbu_t_radius',16)).'px;';$d=get_theme_mod('nbu_t_density','comfortable');$x.='--density:'.($d==='compact'?'.84':($d==='spacious'?'1.18':'1')).';';
 
-$x.='--crt-color:'.sanitize_hex_color(get_theme_mod('nbu_t_crt_color','#00ff41')).';';
-$x.='--crt-case-color:'.sanitize_hex_color(get_theme_mod('nbu_t_crt_case_color','#26272b')).';';
-$x.='--crt-ledon-color:'.sanitize_hex_color(get_theme_mod('nbu_t_crt_ledon_color','#2ee06a')).';';
+$x.='--crt-color:'.(sanitize_hex_color(get_theme_mod('nbu_t_crt_color','#00ff41'))?:'#00ff41').';';
+$x.='--crt-case-color:'.(sanitize_hex_color(get_theme_mod('nbu_t_crt_case_color','#26272b'))?:'#26272b').';';
+$x.='--crt-ledon-color:'.(sanitize_hex_color(get_theme_mod('nbu_t_crt_ledon_color','#2ee06a'))?:'#2ee06a').';';
 
 $scanDensity=absint(get_theme_mod('nbu_t_crt_scanlines',35));$scanGap=max(2,round(6-($scanDensity/100)*4));
 $x.='--crt-scan-gap:'.$scanGap.'px;';
@@ -106,7 +106,7 @@ $eyeR=absint(get_theme_mod('nbu_t_crt_eye_radius',50));$x.='--crt-eye-radius:'.$
 
 $ledBrightness=absint(get_theme_mod('nbu_t_led_brightness',100));$x.='--led-brightness:'.round($ledBrightness/100,2).';';
 $ledSpeed=absint(get_theme_mod('nbu_t_led_speed',26));$x.='--led-speed:'.round($ledSpeed/10,2).'s;';
-$x.='--led-color:'.sanitize_hex_color(get_theme_mod('nbu_t_led_color','#51d6a7')).';';
+$x.='--led-color:'.(sanitize_hex_color(get_theme_mod('nbu_t_led_color','#51d6a7'))?:'#51d6a7').';';
 
 $x.='}';wp_add_inline_style('nbu-terminal',$x);}add_action('wp_enqueue_scripts','nbu_t_vars',20);
 
